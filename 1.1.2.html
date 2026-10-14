@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE ICT - 1.1.2 Software Quiz</title>
+    <style>
+        :root {
+            --bg-main: #090d16;
+            --bg-card: #131d31;
+            --border-color: #223354;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        header h1 {
+            color: var(--accent);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .quiz-status {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .score-pill {
+            background-color: #0c4a6e;
+            color: #7dd3fc;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #0284c7;
+        }
+
+        .card {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            background-color: #1e293b;
+            color: var(--text-main);
+            padding: 1rem 1.25rem;
+            border-radius: 0.85rem;
+            border: 1px solid #334155;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #283548;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #059669 !important;
+            color: #ecfdf5 !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: #7f1d1d !important;
+            border-color: #dc2626 !important;
+            color: #fee2e2 !important;
+        }
+
+        .feedback-box {
+            padding: 1.15rem;
+            border-radius: 0.85rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .feedback-box.correct-feedback {
+            background-color: #022c22;
+            border: 1px solid #047857;
+            color: #a7f3d0;
+        }
+
+        .feedback-box.incorrect-feedback {
+            background-color: #450a0a;
+            border: 1px solid #b91c1c;
+            color: #fecdd3;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.85rem 1.75rem;
+            border-radius: 0.85rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .results-card {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .results-card h2 {
+            font-size: 2.25rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .results-card p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>IGCSE ICT Practice Quiz</h1>
+        <p>Topic 1.1.2 Software (Applications & System Software)</p>
+    </header>
+
+    <main>
+        <div class="quiz-status">
+            <span id="question-counter">Question 1 of 30</span>
+            <span id="score-display" class="score-pill">Score: 0</span>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="card">
+            <div id="question-box" class="question-text">
+                Loading question...
+            </div>
+
+            <div id="options-container" class="options-list">
+                <!-- Options populated dynamically -->
+            </div>
+
+            <div id="feedback-box" class="feedback-box hidden">
+                <!-- Feedback populated dynamically -->
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button id="next-btn" onclick="nextQuestion()" class="btn-primary hidden">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="card results-card hidden">
+            <h2>Quiz Completed! 🎉</h2>
+            <p id="final-score">You scored X out of 30</p>
+            <button onclick="restartQuiz()" class="btn-primary">Restart Quiz</button>
+        </div>
+    </main>
+
+    <footer>
+        IGCSE ICT Revision &bull; Hardware and Software
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the general definition of software in a computer system?",
+                options: [
+                    { text: "The physical tangible circuits and microchips", isCorrect: false, rationale: "Physical components are hardware, not software." },
+                    { text: "The programs and instructions that control the computer system and process data", isCorrect: true, rationale: "Software consists of all the programs that tell the hardware how to operate and process user data." },
+                    { text: "The external peripherals attached via USB ports", isCorrect: false, rationale: "Peripherals are physical hardware devices." },
+                    { text: "The permanent boot configuration stored on ROM chips", isCorrect: false, rationale: "Permanent low-level boot instructions are firmware." }
+                ]
+            },
+            {
+                question: "What is the primary purpose of applications software?",
+                options: [
+                    { text: "To provide an operating platform for other background programs", isCorrect: false, rationale: "Providing a foundational platform is the role of system software." },
+                    { text: "To allow the user to perform specific tasks such as word processing or calculations", isCorrect: true, rationale: "Applications software is designed to let users accomplish specific real-world tasks." },
+                    { text: "To enable hardware devices to communicate directly with the operating system", isCorrect: false, rationale: "Hardware-OS communication is managed by device drivers." },
+                    { text: "To translate high-level programming source code into machine code", isCorrect: false, rationale: "Translation is performed by a compiler." }
+                ]
+            },
+            {
+                question: "Which of the following is classified as applications software?",
+                options: [
+                    { text: "Operating system", isCorrect: false, rationale: "An operating system is system software." },
+                    { text: "Spreadsheet software", isCorrect: true, rationale: "Spreadsheets are applications designed for numerical and financial modeling." },
+                    { text: "Device driver", isCorrect: false, rationale: "A device driver is system software." },
+                    { text: "Compiler", isCorrect: false, rationale: "A compiler is system software." }
+                ]
+            },
+            {
+                question: "What is the main function of system software?",
+                options: [
+                    { text: "To solve specific user problems like editing a video or writing an essay", isCorrect: false, rationale: "Solving specific user problems describes applications software." },
+                    { text: "To provide a platform on which other software can run and manage computer resources", isCorrect: true, rationale: "System software manages hardware and provides the foundational operating environment." },
+                    { text: "To convert physical analogue temperatures into digital binary values", isCorrect: false, rationale: "Analogue conversion is handled by ADCs." },
+                    { text: "To print multi-part carbon copy invoices", isCorrect: false, rationale: "Printing is a hardware output function." }
+                ]
+            },
+            {
+                question: "Which of the following is an example of system software?",
+                options: [
+                    { text: "Word processing software", isCorrect: false, rationale: "Word processing is applications software." },
+                    { text: "Database management system (DBMS)", isCorrect: false, rationale: "A DBMS is applications software." },
+                    { text: "Operating system", isCorrect: true, rationale: "Operating systems are core examples of system software." },
+                    { text: "Computer-aided design (CAD)", isCorrect: false, rationale: "CAD is applications software." }
+                ]
+            },
+            {
+                question: "What is the specific purpose of word processing software?",
+                options: [
+                    { text: "To manipulate text documents, such as essays, reports, and letters", isCorrect: true, rationale: "Word processors provide tools for entering, editing, formatting, and printing text." },
+                    { text: "To combine multiple compiled object files into a single executable program", isCorrect: false, rationale: "Combining object files is the job of a linker." },
+                    { text: "To manage security, screensavers, and disk defragmentation", isCorrect: false, rationale: "Managing maintenance tasks is done by utility software." },
+                    { text: "To enable hardware peripherals like printers to communicate with the OS", isCorrect: false, rationale: "Peripheral communication is managed by device drivers." }
+                ]
+            },
+            {
+                question: "What is source code?",
+                options: [
+                    { text: "The binary machine code understood directly by the processor", isCorrect: false, rationale: "Binary machine code is object code, not source code." },
+                    { text: "The original program written in a high-level language before compilation", isCorrect: true, rationale: "Source code is human-readable code written by programmers in languages like Python, Java, or C++." },
+                    { text: "The compiled output file produced by a linker", isCorrect: false, rationale: "Linkers combine object files." },
+                    { text: "The driver software enabling hardware communication", isCorrect: false, rationale: "Driver software interfaces hardware with the OS." }
+                ]
+            },
+            {
+                question: "What is object code?",
+                options: [
+                    { text: "The human-readable high-level programming instructions", isCorrect: false, rationale: "Human-readable code is source code." },
+                    { text: "The machine code output produced after a compiler translates source code", isCorrect: true, rationale: "Object code consists of binary instructions ready for execution." },
+                    { text: "The database table records used for queries", isCorrect: false, rationale: "Database records belong to database applications." },
+                    { text: "The backup archive file stored on an external drive", isCorrect: false, rationale: "Backup files are user or system data copies." }
+                ]
+            },
+            {
+                question: "What is the primary function of a compiler?",
+                options: [
+                    { text: "To translate a program written in a high-level language into machine code all at once", isCorrect: true, rationale: "Compilers convert entire high-level source code programs into executable machine code." },
+                    { text: "To link separate compiled object modules together into a final program", isCorrect: false, rationale: "Linking separate modules is performed by a linker." },
+                    { text: "To enable the operating system to recognize newly plugged-in hardware devices", isCorrect: false, rationale: "Hardware recognition is handled by device drivers." },
+                    { text: "To back up critical files and repair damaged disk sectors", isCorrect: false, rationale: "File backup and disk repair are utility functions." }
+                ]
+            },
+            {
+                question: "Once a program is compiled into machine code, can it be executed repeatedly without recompilation?",
+                options: [
+                    { text: "No, it must be recompiled every single time it is run.", isCorrect: false, rationale: "Compiled machine code can be executed repeatedly without retranslating." },
+                    { text: "Yes, the compiled machine code can be run again and again to perform the task", isCorrect: true, rationale: "Object code can be run multiple times efficiently without needing the source code or compiler again." },
+                    { text: "Only if the source code is modified by a linker.", isCorrect: false, rationale: "Linkers combine object files, they do not require recompilation." },
+                    { text: "Only if a device driver is updated.", isCorrect: false, rationale: "Device drivers are unrelated to code compilation." }
+                ]
+            },
+            {
+                question: "Which of the following are examples of high-level programming languages processed by compilers?",
+                options: [
+                    { text: "Java, Python, C++, Visual Basic", isCorrect: true, rationale: "These are well-known high-level programming languages translated into machine code." },
+                    { text: "Antivirus, Anti-spyware, Backup, Disk repair", isCorrect: false, rationale: "These are utility software programs." },
+                    { text: "Word processing, Spreadsheet, Database, CAD", isCorrect: false, rationale: "These are applications software packages." },
+                    { text: "Operating systems, Drivers, Compilers, Linkers", isCorrect: false, rationale: "These are system software categories." }
+                ]
+            },
+            {
+                question: "What is the primary purpose of utility programs?",
+                options: [
+                    { text: "To help manage, maintain, and control computer system resources", isCorrect: true, rationale: "Utilities are system software designed for specific maintenance and resource management tasks." },
+                    { text: "To allow users to create essays, reports, and text documents", isCorrect: false, rationale: "Text creation is handled by word processors." },
+                    { text: "To translate source code into object code modules", isCorrect: false, rationale: "Source code translation is done by compilers." },
+                    { text: "To connect external peripherals to USB ports", isCorrect: false, rationale: "Peripherals connect via physical ports and drivers." }
+                ]
+            },
+            {
+                question: "Which of the following is listed as an example of a utility program?",
+                options: [
+                    { text: "Disk defragmenter", isCorrect: true, rationale: "Disk defragmenters are utility programs that optimize file storage layout on magnetic disks." },
+                    { text: "Computer-aided design (CAD)", isCorrect: false, rationale: "CAD is applications software." },
+                    { text: "Database management system (DBMS)", isCorrect: false, rationale: "A DBMS is applications software." },
+                    { text: "Device driver", isCorrect: false, rationale: "Device drivers are system software, distinct from maintenance utilities." }
+                ]
+            },
+            {
+                question: "What is the function of a linker (or link editor)?",
+                options: [
+                    { text: "To take one or more object files produced by a compiler and combine them into a single runnable program", isCorrect: true, rationale: "Linkers merge separate compiled code modules together to form the final executable program." },
+                    { text: "To translate human-readable source code into binary machine code", isCorrect: false, rationale: "Translating source code into machine code is done by a compiler." },
+                    { text: "To allow hardware devices to communicate with the operating system", isCorrect: false, rationale: "Hardware communication with the OS is managed by device drivers." },
+                    { text: "To carry out queries on database tables and generate reports", isCorrect: false, rationale: "Database queries are handled by DBMS software." }
+                ]
+            },
+            {
+                question: "Why do programming languages often allow programmers to write code in separate pieces called modules?",
+                options: [
+                    { text: "To simplify programming by breaking complex programs into smaller, more manageable sub-tasks", isCorrect: true, rationale: "Modular programming makes software development, testing, and maintenance much easier." },
+                    { text: "To ensure compilers can run without needing object files", isCorrect: false, rationale: "Compilers produce object files from modules." },
+                    { text: "To allow utility programs to defragment storage drives faster", isCorrect: false, rationale: "Modules are for code structure, not disk defragmentation." },
+                    { text: "To prevent operating systems from requiring device drivers", isCorrect: false, rationale: "Modules have nothing to do with hardware drivers." }
+                ]
+            },
+            {
+                question: "What is a device driver?",
+                options: [
+                    { text: "Software that enables hardware devices to communicate with the computer's operating system", isCorrect: true, rationale: "Drivers act as translators between physical hardware peripherals and the operating system." },
+                    { text: "Applications software used to edit video clips and audio tracks", isCorrect: false, rationale: "Video and audio editing are applications software." },
+                    { text: "A utility program used to back up files and repair disks", isCorrect: false, rationale: "File backup and disk repair are utility programs." },
+                    { text: "A programming language translated by a compiler", isCorrect: false, rationale: "Languages like Java and Python are translated by compilers." }
+                ]
+            },
+            {
+                question: "What happens if a hardware device is plugged into a computer, but the operating system cannot find the appropriate driver?",
+                options: [
+                    { text: "An error message will be produced and the device will fail to operate correctly", isCorrect: true, rationale: "The OS alerts the user when a required device driver is missing." },
+                    { text: "The compiler automatically generates a new driver module.", isCorrect: false, rationale: "Compilers do not generate hardware drivers." },
+                    { text: "The linker combines the hardware into a single program.", isCorrect: false, rationale: "Linkers combine software object files, not hardware peripherals." },
+                    { text: "The utility software repairs the USB port automatically.", isCorrect: false, rationale: "Utilities do not automatically write missing hardware drivers." }
+                ]
+            },
+            {
+                question: "Which of the following hardware devices requires an associated device driver to work properly?",
+                options: [
+                    { text: "Printers", isCorrect: true, rationale: "Printers require specific device drivers to communicate print jobs with the OS." },
+                    { text: "Compilers", isCorrect: false, rationale: "Compilers are system software, not hardware devices." },
+                    { text: "Linkers", isCorrect: false, rationale: "Linkers are system software, not hardware devices." },
+                    { text: "Spreadsheets", isCorrect: false, rationale: "Spreadsheets are applications software." }
+                ]
+            },
+            {
+                question: "Which of these utility programs is specifically designed to protect against malicious software?",
+                options: [
+                    { text: "Antivirus", isCorrect: true, rationale: "Antivirus software is a utility designed to detect, prevent, and remove malware." },
+                    { text: "Disk defragmenter", isCorrect: false, rationale: "A disk defragmenter optimizes file storage order on magnetic drives." },
+                    { text: "Word processor", isCorrect: false, rationale: "A word processor is applications software." },
+                    { text: "Device driver", isCorrect: false, rationale: "A device driver enables hardware-OS communication." }
+                ]
+            },
+            {
+                question: "What applications software tool is used to store structured data, carry out queries, and produce reports?",
+                options: [
+                    { text: "Database management system (DBMS)", isCorrect: true, rationale: "A DBMS allows users to add, delete, modify data in tables and query records for reports." },
+                    { text: "Audio editing software", isCorrect: false, rationale: "Audio editing modifies sound tracks, not database records." },
+                    { text: "Disk repair utility", isCorrect: false, rationale: "Disk repair is a system utility, not database software." },
+                    { text: "Linker", isCorrect: false, rationale: "A linker combines compiled code modules." }
+                ]
+            },
+            {
+                question: "Which software category includes apps and applets, video editing, and computer-aided design (CAD)?",
+                options: [
+                    { text: "Applications software", isCorrect: true, rationale: "Apps, video editing, and CAD are all classified under applications software." },
+                    { text: "System software", isCorrect: false, rationale: "System software includes compilers, linkers, drivers, OS, and utilities." },
+                    { text: "Hardware peripherals", isCorrect: false, rationale: "These are software programs, not physical hardware components." },
+                    { text: "Machine code binaries", isCorrect: false, rationale: "These are high-level applications, not raw machine code." }
+                ]
+            },
+            {
+                question: "What is the primary function of control and measurement software?",
+                options: [
+                    { text: "To interface with sensors and monitor/control physical real-world processes", isCorrect: true, rationale: "Control and measurement software is used alongside sensors to track and manage physical conditions." },
+                    { text: "To link separate compiled object modules into an executable program", isCorrect: false, rationale: "Linking modules is done by a linker." },
+                    { text: "To translate high-level source code into machine code", isCorrect: false, rationale: "Translation is done by a compiler." },
+                    { text: "To format text documents and create academic reports", isCorrect: false, rationale: "Text formatting is done by word processors." }
+                ]
+            },
+            {
+                question: "Which utility program helps protect user files against accidental deletion or hardware failure by creating duplicate copies?",
+                options: [
+                    { text: "File backup utility", isCorrect: true, rationale: "File backup utilities duplicate critical data to secure storage locations." },
+                    { text: "Anti-spyware", isCorrect: false, rationale: "Anti-spyware targets unauthorized tracking software." },
+                    { text: "Device driver", isCorrect: false, rationale: "Drivers enable hardware communication." },
+                    { text: "Compiler", isCorrect: false, rationale: "Compilers translate programming code." }
+                ]
+            },
+            {
+                question: "What software type is responsible for managing screensavers, disk repair, and file management utilities?",
+                options: [
+                    { text: "Utility software", isCorrect: true, rationale: "Screensavers, disk repair, and file management are standard utility programs." },
+                    { text: "Applications software", isCorrect: false, rationale: "Applications software solves specific user tasks." },
+                    { text: "High-level programming languages", isCorrect: false, rationale: "HLLs are programming languages like Python or Java." },
+                    { text: "Database management systems", isCorrect: false, rationale: "DBMS manages structured data tables." }
+                ]
+            },
+            {
+                question: "When a hardware device like a memory stick or mouse is plugged into a USB port, what does the operating system immediately look for?",
+                options: [
+                    { text: "The appropriate device driver", isCorrect: true, rationale: "The OS searches for the matching device driver to enable communication with the new device." },
+                    { text: "A compatible compiler to translate source code", isCorrect: false, rationale: "Compilers are not involved in plugging in USB peripherals." },
+                    { text: "An object file linker to merge code modules", isCorrect: false, rationale: "Linkers combine code modules, not hardware peripherals." },
+                    { text: "A disk defragmenter utility to optimize storage sectors", isCorrect: false, rationale: "Defragmenters organize magnetic storage blocks." }
+                ]
+            },
+            {
+                question: "What type of software allows users to manipulate numerical and financial data arranged in grids of rows and columns?",
+                options: [
+                    { text: "Spreadsheet software", isCorrect: true, rationale: "Spreadsheet software is designed for numerical modeling, formulas, and calculations in grids." },
+                    { text: "Word processing software", isCorrect: false, rationale: "Word processing is tailored for text and paragraphs." },
+                    { text: "Device driver", isCorrect: false, rationale: "Device drivers manage hardware-OS communication." },
+                    { text: "Compiler", isCorrect: false, rationale: "Compilers translate programming code." }
+                ]
+            },
+            {
+                question: "Which term describes small application programs frequently downloaded for use on mobile devices or web browsers?",
+                options: [
+                    { text: "Apps and applets", isCorrect: true, rationale: "Apps and applets are compact applications designed for specific tasks on mobile or web platforms." },
+                    { text: "Compilers and linkers", isCorrect: false, rationale: "Compilers and linkers are system software." },
+                    { text: "Disk repair utilities", isCorrect: false, rationale: "Disk repair tools are maintenance utilities." },
+                    { text: "Source code modules", isCorrect: false, rationale: "Source code modules are uncompiled programming segments." }
+                ]
+            },
+            {
+                question: "What is the primary function of graphics editing, audio editing, and video editing software?",
+                options: [
+                    { text: "To allow users to modify and enhance visual or acoustic media content", isCorrect: true, rationale: "These applications allow users to create and refine images, sound tracks, and video clips." },
+                    { text: "To provide a foundational operating platform for system hardware", isCorrect: false, rationale: "Foundational platforms are provided by system software." },
+                    { text: "To combine compiled object modules into executable programs", isCorrect: false, rationale: "Combining object modules is done by a linker." },
+                    { text: "To translate high-level source code into binary machine code", isCorrect: false, rationale: "Translation is handled by a compiler." }
+                ]
+            },
+            {
+                question: "Why is a compiler necessary when developing applications in languages like C++ or Java?",
+                options: [
+                    { text: "Because computers can only execute binary machine code directly", isCorrect: true, rationale: "Processors process binary 0s and 1s, so high-level language source code must be compiled into machine code." },
+                    { text: "Because the operating system cannot load apps without a linker", isCorrect: false, rationale: "Linkers combine object files, but compilation converts HLL to machine code." },
+                    { text: "To prevent antivirus utilities from blocking software installation", isCorrect: false, rationale: "Compilers translate code, they do not manage security bypasses." },
+                    { text: "To automatically defragment system RAM during program execution", isCorrect: false, rationale: "Compilers do not perform RAM defragmentation." }
+                ]
+            },
+            {
+                question: "Which of the following best summarizes the difference between applications software and system software?",
+                options: [
+                    { text: "Applications software performs specific user tasks, while system software manages computer hardware and system operations", isCorrect: true, rationale: "Applications software addresses user tasks, while system software handles background hardware and platform operations." },
+                    { text: "Applications software is non-volatile, while system software is volatile", isCorrect: false, rationale: "Volatility refers to RAM and storage hardware, not software types." },
+                    { text: "Applications software only runs on mobile phones, while system software only runs on servers", isCorrect: false, rationale: "Both types of software run across various computer platforms." },
+                    { text: "Applications software is written in machine code, while system software is written in high-level languages", isCorrect: false, rationale: "Both software types are originally written in programming languages and compiled." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionCounter = document.getElementById("question-counter");
+        const scoreDisplay = document.getElementById("score-display");
+        const questionBox = document.getElementById("question-box");
+        const optionsContainer = document.getElementById("options-container");
+        const feedbackBox = document.getElementById("feedback-box");
+        const nextBtn = document.getElementById("next-btn");
+        const quizContainer = document.getElementById("quiz-container");
+        const resultsContainer = document.getElementById("results-container");
+        const finalScore = document.getElementById("final-score");
+
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.classList.add("hidden");
+            nextBtn.classList.add("hidden");
+
+            const q = questions[currentQuestionIndex];
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            scoreDisplay.textContent = `Score: ${score}`;
+            questionBox.textContent = q.question;
+
+            optionsContainer.innerHTML = "";
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.textContent = opt.text;
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestionIndex];
+            const allOptionButtons = optionsContainer.children;
+
+            q.options.forEach((opt, idx) => {
+                allOptionButtons[idx].disabled = true;
+                if (opt.isCorrect) {
+                    allOptionButtons[idx].classList.add("correct");
+                } else if (idx === selectedIndex) {
+                    allOptionButtons[idx].classList.add("incorrect");
+                }
+            });
+
+            const selectedOpt = q.options[selectedIndex];
+            feedbackBox.classList.remove("hidden");
+            if (selectedOpt.isCorrect) {
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+                feedbackBox.className = "feedback-box correct-feedback";
+                feedbackBox.innerHTML = `<strong>Correct!</strong> ${selectedOpt.rationale}`;
+            } else {
+                feedbackBox.className = "feedback-box incorrect-feedback";
+                feedbackBox.innerHTML = `<strong>Incorrect.</strong> ${selectedOpt.rationale}`;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.textContent = "Next Question";
+            } else {
+                nextBtn.textContent = "View Results";
+            }
+            nextBtn.classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                quizContainer.classList.add("hidden");
+                resultsContainer.classList.remove("hidden");
+                finalScore.textContent = `You scored ${score} out of ${questions.length}`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultsContainer.classList.add("hidden");
+            quizContainer.classList.remove("hidden");
+            loadQuestion();
+        }
+
+        // Initialize quiz on load
+        loadQuestion();
+    </script>
+</body>
+</html>
